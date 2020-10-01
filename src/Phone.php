@@ -268,4 +268,35 @@ class Phone
             }
         }
     }
+
+    /**
+     * Get object properties to array.
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'phone_number' => $this->phone_number,
+            'country_code' => $this->country_code,
+            'time_zone' => $this->time_zone,
+            'inserted_on' => $this->inserted_on ? $this->inserted_on->format(\DateTime::W3C) : null,
+            'updated_on' => $this->updated_on ? $this->updated_on->format(\DateTime::W3C) : null
+        ];
+    }
+
+    /**
+     * Set object properties from array.
+     * @param array $array Properties
+     */
+    public function fromArray($array)
+    {
+        $this->first_name = $array['first_name'] ?? null;
+        $this->last_name = $array['last_name'] ?? null;
+        $this->phone_number = $array['phone_number'] ?? null;
+        $this->country_code = $array['country_code'] ?? null;
+        $this->time_zone = $array['time_zone'] ?? null;
+    }
 }

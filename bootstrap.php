@@ -9,6 +9,6 @@ $is_dev_mode = true;
 
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/src'], $is_dev_mode, null, null, false);
 
-$conn = require 'config/cofig.php';
+$conn = require 'config/config.php';
 
 $entity_manager = EntityManager::create($conn, $config);
