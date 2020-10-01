@@ -5,6 +5,6 @@ services:
         ports: [3306:3306]
         environment:
             MYSQL_ROOT_PASSWORD: rt_psswrd
-            MYSQL_DATABASE: phone
+            MYSQL_DATABASE: hostaway
             MYSQL_USER: sr
             MYSQL_PASSWORD: psswrd
