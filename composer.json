@@ -8,6 +8,8 @@
         "http-interop/http-factory-guzzle": "^1.0"
     },
     "autoload": {
-        "psr-0": {"": "src/"}
+        "psr-0": {
+            "": ["entities/", "controllers/"]
+        }
     }
 }
