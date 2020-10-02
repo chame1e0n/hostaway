@@ -8,7 +8,12 @@ require __DIR__ . '/../bootstrap.php';
 $app = AppFactory::create();
 
 // Add error middleware
-$app->addErrorMiddleware(true, true, true);
+$error_middleware = $app->addErrorMiddleware(true, true, true);
+$error_middleware->setDefaultErrorHandler(function($request, $exception) {
+    $content = ['code' => $exception->getCode(), 'message' => $exception->getMessage()];
+
+    return new \GuzzleHttp\Psr7\Response(500, ['Content-Type' => 'application/json'], json_encode($content));
+});
 
 \Controller::init($entity_manager);
 
