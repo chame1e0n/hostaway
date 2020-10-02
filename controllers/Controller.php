@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -12,6 +14,9 @@ class Controller
     // Entity manager of Doctrine ORM
     private static $entity_manager;
 
+    // Logger
+    private static $logger;
+
     /**
      * Initialization of controller.
      * @param EntityManager $entity_manager Entity manager
@@ -19,7 +24,13 @@ class Controller
      */
     public static function init(EntityManager $entity_manager): void
     {
+        $DS = DIRECTORY_SEPARATOR;
+
+        $logger = new Logger('hostaway');
+        $logger->pushHandler(new StreamHandler(__DIR__ . $DS . '..' . $DS . 'logs' . $DS . 'errors.log', Logger::WARNING));
+
         self::$entity_manager = $entity_manager;
+        self::$logger = $logger;
     }
 
     public static function list(Request $request, Response $response, $args): Response
@@ -38,6 +49,8 @@ class Controller
                 $content[] = $phone->toArray();
             }
         } catch(\Exception $e) {
+            self::$logger->error('[LIST]: ' . $e->getMessage(), ['args' => $args]);
+
             $content = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
@@ -57,6 +70,8 @@ class Controller
 
             $content = $phone->toArray();
         } catch(\Exception $e) {
+            self::$logger->error('[SHOW]: ' . $e->getMessage(), ['args' => $args]);
+
             $content = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
@@ -78,6 +93,8 @@ class Controller
 
             $content = ['code' => 200, 'message' => 'Phone (' . $phone->getId() . ') is created successfully.'];
         } catch(\Exception $e) {
+            self::$logger->error('[CREATE]: ' . $e->getMessage());
+
             $content = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
@@ -104,6 +121,8 @@ class Controller
 
             $content = ['code' => 200, 'message' => 'Phone (' . $phone->getId() . ') is updated successfully.'];
         } catch(\Exception $e) {
+            self::$logger->error('[UPDATE]: ' . $e->getMessage(), ['args' => $args]);
+
             $content = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
@@ -126,6 +145,8 @@ class Controller
 
             $content = ['code' => 200, 'message' => 'Phone (' . $args['id'] . ') is removed successfully.'];
         } catch(\Exception $e) {
+            self::$logger->error('[DELETE]: ' . $e->getMessage(), ['args' => $args]);
+
             $content = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
